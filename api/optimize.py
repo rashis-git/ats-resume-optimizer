@@ -4,13 +4,11 @@ POST /api/optimize
 """
 
 import json
-from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 
 
 def get_system_prompt():
     """Load the ATS system prompt with writing rules"""
-    # In Vercel, the file path is relative to the project root
     rules_path = Path(__file__).parent.parent / "prompts" / "rules.md"
 
     if rules_path.exists():
@@ -59,128 +57,55 @@ After the resume, provide a brief "Changes Summary" section explaining:
 
 
 def optimize_with_claude(api_key: str, resume: str, job_description: str) -> str:
-    """Optimize resume using Claude API"""
     from anthropic import Anthropic
-
     client = Anthropic(api_key=api_key)
-
     message = client.messages.create(
         model="claude-sonnet-4-20250514",
         max_tokens=4096,
         system=get_system_prompt(),
-        messages=[
-            {
-                "role": "user",
-                "content": f"""Please optimize this resume for the following job description.
-
-## Current Resume:
-{resume}
-
-## Job Description:
-{job_description}
-
-Please return the optimized resume in markdown format, followed by a changes summary."""
-            }
-        ]
+        messages=[{"role": "user", "content": f"Please optimize this resume for the following job description.\n\n## Current Resume:\n{resume}\n\n## Job Description:\n{job_description}\n\nPlease return the optimized resume in markdown format, followed by a changes summary."}]
     )
-
     return message.content[0].text
 
 
 def optimize_with_openai(api_key: str, resume: str, job_description: str) -> str:
-    """Optimize resume using OpenAI API"""
     from openai import OpenAI
-
     client = OpenAI(api_key=api_key)
-
     response = client.chat.completions.create(
         model="gpt-4o",
         max_tokens=4096,
         messages=[
-            {
-                "role": "system",
-                "content": get_system_prompt()
-            },
-            {
-                "role": "user",
-                "content": f"""Please optimize this resume for the following job description.
-
-## Current Resume:
-{resume}
-
-## Job Description:
-{job_description}
-
-Please return the optimized resume in markdown format, followed by a changes summary."""
-            }
+            {"role": "system", "content": get_system_prompt()},
+            {"role": "user", "content": f"Please optimize this resume for the following job description.\n\n## Current Resume:\n{resume}\n\n## Job Description:\n{job_description}\n\nPlease return the optimized resume in markdown format, followed by a changes summary."}
         ]
     )
-
     return response.choices[0].message.content
 
 
 def optimize_with_openrouter(api_key: str, resume: str, job_description: str) -> str:
-    """Optimize resume using OpenRouter API"""
     from openai import OpenAI
-
-    client = OpenAI(
-        api_key=api_key,
-        base_url="https://openrouter.ai/api/v1"
-    )
-
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
     response = client.chat.completions.create(
         model="anthropic/claude-sonnet-4",
         max_tokens=4096,
         messages=[
-            {
-                "role": "system",
-                "content": get_system_prompt()
-            },
-            {
-                "role": "user",
-                "content": f"""Please optimize this resume for the following job description.
-
-## Current Resume:
-{resume}
-
-## Job Description:
-{job_description}
-
-Please return the optimized resume in markdown format, followed by a changes summary."""
-            }
+            {"role": "system", "content": get_system_prompt()},
+            {"role": "user", "content": f"Please optimize this resume for the following job description.\n\n## Current Resume:\n{resume}\n\n## Job Description:\n{job_description}\n\nPlease return the optimized resume in markdown format, followed by a changes summary."}
         ]
     )
-
     return response.choices[0].message.content
 
 
 def optimize_with_gemini(api_key: str, resume: str, job_description: str) -> str:
-    """Optimize resume using Google Gemini API"""
     import google.generativeai as genai
-
     genai.configure(api_key=api_key)
-
     model = genai.GenerativeModel('gemini-1.5-pro')
-
-    prompt = f"""{get_system_prompt()}
-
-Please optimize this resume for the following job description.
-
-## Current Resume:
-{resume}
-
-## Job Description:
-{job_description}
-
-Please return the optimized resume in markdown format, followed by a changes summary."""
-
+    prompt = f"{get_system_prompt()}\n\nPlease optimize this resume for the following job description.\n\n## Current Resume:\n{resume}\n\n## Job Description:\n{job_description}\n\nPlease return the optimized resume in markdown format, followed by a changes summary."
     response = model.generate_content(prompt)
-
     return response.text
 
 
 def optimize_resume(provider: str, api_key: str, resume: str, job_description: str) -> str:
-    """Main function to optimize resume using selected LLM provider"""
     if provider == "Claude":
         return optimize_with_claude(api_key, resume, job_description)
     elif provider == "OpenAI":
@@ -193,61 +118,52 @@ def optimize_resume(provider: str, api_key: str, resume: str, job_description: s
         raise ValueError(f"Unknown provider: {provider}")
 
 
+# Vercel Serverless Function Handler
+from http.server import BaseHTTPRequestHandler
+
 class handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
+
     def do_POST(self):
         try:
-            # Read request body
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data.decode('utf-8'))
+            # Get content length
+            content_length = int(self.headers.get('Content-Length', 0))
 
-            # Extract parameters
+            # Read body
+            body = self.rfile.read(content_length)
+            data = json.loads(body.decode('utf-8'))
+
             provider = data.get('provider', 'Claude')
             api_key = data.get('api_key', '')
             resume = data.get('resume', '')
             job_description = data.get('job_description', '')
 
-            # Validate
             if not api_key:
-                self._send_error(400, "API key is required")
+                self._send_json(400, {"success": False, "error": "API key is required"})
                 return
             if not resume:
-                self._send_error(400, "Resume text is required")
+                self._send_json(400, {"success": False, "error": "Resume text is required"})
                 return
             if not job_description:
-                self._send_error(400, "Job description is required")
+                self._send_json(400, {"success": False, "error": "Job description is required"})
                 return
 
-            # Optimize
             optimized = optimize_resume(provider, api_key, resume, job_description)
-
-            # Send response
-            self._send_response(200, {"success": True, "optimized_resume": optimized})
+            self._send_json(200, {"success": True, "optimized_resume": optimized})
 
         except Exception as e:
-            self._send_error(500, str(e))
+            self._send_json(500, {"success": False, "error": str(e)})
 
-    def do_OPTIONS(self):
-        """Handle CORS preflight"""
-        self.send_response(200)
-        self._send_cors_headers()
-        self.end_headers()
-
-    def _send_cors_headers(self):
+    def _send_json(self, status_code, data):
+        self.send_response(status_code)
+        self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-
-    def _send_response(self, status_code, data):
-        self.send_response(status_code)
-        self.send_header('Content-Type', 'application/json')
-        self._send_cors_headers()
         self.end_headers()
         self.wfile.write(json.dumps(data).encode('utf-8'))
-
-    def _send_error(self, status_code, message):
-        self.send_response(status_code)
-        self.send_header('Content-Type', 'application/json')
-        self._send_cors_headers()
-        self.end_headers()
-        self.wfile.write(json.dumps({"success": False, "error": message}).encode('utf-8'))
