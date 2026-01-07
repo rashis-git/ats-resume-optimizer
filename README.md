@@ -1,63 +1,82 @@
 # ATS Resume Optimizer
 
-Optimize your resume for any job description using AI (Claude or GPT-4).
+Optimize your resume for any job description using AI. Supports multiple LLM providers.
 
 ## Features
 
-- **AI-Powered Optimization**: Uses Claude or GPT-4 to tailor your resume
-- **ATS Keyword Matching**: Extracts and integrates relevant keywords from job descriptions
-- **STAR Method**: Restructures achievements using Situation-Task-Action-Result format
-- **Writing Quality**: Applies professional writing rules to avoid AI-sounding text
-- **Multiple Formats**: Download as Markdown or PDF
-- **Privacy First**: Your data is never stored - processed in memory only
+- **Multi-provider support**: Claude, OpenAI, OpenRouter, Gemini
+- **BYOK (Bring Your Own Key)**: Your API key, your control
+- **Privacy-first**: No data stored, processed in real-time
+- **ATS-optimized**: Keyword matching, STAR method, clean formatting
+- **Download options**: Markdown export, clipboard copy
 
-## How to Use
+## Live Demo
 
-1. **Get an API Key**:
-   - Claude: [console.anthropic.com](https://console.anthropic.com/)
-   - OpenAI: [platform.openai.com](https://platform.openai.com/)
+[ats-resume-optimizer.rashigupta.cloud](https://ats-resume-optimizer.rashigupta.cloud)
 
-2. **Enter Your Resume**: Paste your current resume or upload a file
+## Deploy Your Own
 
-3. **Paste Job Description**: Include the full JD with requirements
+### Vercel (Recommended)
 
-4. **Click Optimize**: AI will tailor your resume for the specific role
+1. Fork this repository
+2. Import to Vercel: [vercel.com/new](https://vercel.com/new)
+3. Deploy - no environment variables needed!
 
-5. **Download**: Get your optimized resume as Markdown or PDF
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/rashis-git/ats-resume-optimizer)
 
-## Run Locally
+### Local Development
 
 ```bash
-# Clone the repo
-git clone https://github.com/yourusername/ats-resume-optimizer.git
-cd ats-resume-optimizer
+# Install Vercel CLI
+npm i -g vercel
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the app
-streamlit run app.py
+# Run locally
+vercel dev
 ```
 
-## Deploy to Streamlit Cloud
+## Project Structure
 
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your GitHub repo
-4. Deploy!
+```
+ats-resume-optimizer/
+├── api/
+│   └── optimize.py      # Serverless API endpoint
+├── public/
+│   └── index.html       # Frontend UI
+├── prompts/
+│   └── rules.md         # Writing style guidelines
+├── requirements.txt     # Python dependencies
+└── vercel.json          # Vercel configuration
+```
+
+## API Usage
+
+```bash
+POST /api/optimize
+Content-Type: application/json
+
+{
+  "provider": "Claude",
+  "api_key": "your-api-key",
+  "resume": "# Your resume in markdown...",
+  "job_description": "The target job description..."
+}
+```
+
+## Supported Providers
+
+| Provider | Model | Get API Key |
+|----------|-------|-------------|
+| Claude | claude-sonnet-4 | [console.anthropic.com](https://console.anthropic.com/) |
+| OpenAI | gpt-4o | [platform.openai.com](https://platform.openai.com/) |
+| OpenRouter | claude-sonnet-4 | [openrouter.ai](https://openrouter.ai/) |
+| Gemini | gemini-1.5-pro | [aistudio.google.com](https://aistudio.google.com/) |
 
 ## Privacy
 
-- **No data storage**: Resumes and JDs are processed in memory only
-- **No API key storage**: Your API key is used for a single request and discarded
-- **Open source**: Review the code yourself
-
-## Tech Stack
-
-- **Frontend**: Streamlit
-- **AI**: Anthropic Claude / OpenAI GPT-4
-- **PDF Generation**: fpdf2
+- Your resume and API key are sent directly to the LLM provider
+- No data is stored on our servers
+- All processing happens in serverless functions with no persistence
 
 ## License
 
-MIT License - feel free to use and modify!
+MIT

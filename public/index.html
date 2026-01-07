@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Optimizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .config-bar {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .config-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .config-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .config-group select,
+        .config-group input {
+            padding: 10px 14px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            min-width: 200px;
+        }
+
+        .config-group select:focus,
+        .config-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section {
+            padding: 25px 30px;
+        }
+
+        .input-section:first-child {
+            border-right: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .input-section:first-child {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+        }
+
+        .input-section h3 {
+            font-size: 1.1rem;
+            color: #343a40;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-section {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .btn-optimize {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-optimize:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-optimize:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result-section {
+            display: none;
+            padding: 30px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .result-header h3 {
+            font-size: 1.3rem;
+            color: #343a40;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-download {
+            padding: 10px 20px;
+            border: 1px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-download:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #6c757d;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .preview-content {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            line-height: 1.7;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .preview-content h1,
+        .preview-content h2,
+        .preview-content h3 {
+            margin-top: 1.2em;
+            margin-bottom: 0.6em;
+        }
+
+        .preview-content h1:first-child {
+            margin-top: 0;
+        }
+
+        .preview-content ul {
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+
+        .preview-content li {
+            margin-bottom: 0.5em;
+        }
+
+        .markdown-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e9ecef;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #276749;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: white;
+        }
+
+        .privacy-note {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ATS Resume Optimizer</h1>
+            <p>Optimize your resume for any job description using AI. Your data is processed in real-time and never stored.</p>
+        </header>
+
+        <div class="main-card">
+            <div class="config-bar">
+                <div class="config-group">
+                    <label for="provider">AI Provider</label>
+                    <select id="provider">
+                        <option value="Claude">Claude (Anthropic)</option>
+                        <option value="OpenAI">OpenAI (GPT-4)</option>
+                        <option value="OpenRouter">OpenRouter</option>
+                        <option value="Gemini">Gemini (Google)</option>
+                    </select>
+                </div>
+                <div class="config-group" style="flex: 1; min-width: 250px;">
+                    <label for="apiKey">API Key</label>
+                    <input type="password" id="apiKey" placeholder="Enter your API key">
+                    <div class="privacy-note">Your API key is used only for this request and never stored</div>
+                </div>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-section">
+                    <h3>Your Resume</h3>
+                    <textarea id="resume" placeholder="# Your Name
+email@example.com | LinkedIn | Phone
+
+## PROFESSIONAL SUMMARY
+...
+
+## EXPERIENCE
+..."></textarea>
+                </div>
+                <div class="input-section">
+                    <h3>Job Description</h3>
+                    <textarea id="jobDescription" placeholder="Paste the full job description including:
+- Company name
+- Role title
+- Responsibilities
+- Requirements
+- Preferred qualifications"></textarea>
+                </div>
+            </div>
+
+            <div class="button-section">
+                <button class="btn-optimize" id="optimizeBtn" onclick="optimizeResume()">
+                    Optimize Resume
+                </button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Optimizing your resume... This may take 30-60 seconds.</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage">Resume optimized successfully!</div>
+
+            <div class="result-section" id="resultSection">
+                <div class="result-header">
+                    <h3>Optimized Resume</h3>
+                    <div class="download-buttons">
+                        <button class="btn-download" onclick="downloadMarkdown()">Download Markdown</button>
+                        <button class="btn-download" onclick="copyToClipboard()">Copy to Clipboard</button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('preview')">Preview</button>
+                    <button class="tab" onclick="switchTab('markdown')">Markdown</button>
+                </div>
+
+                <div class="tab-content active" id="previewTab">
+                    <div class="preview-content" id="previewContent"></div>
+                </div>
+
+                <div class="tab-content" id="markdownTab">
+                    <div class="markdown-content" id="markdownContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Built with Vercel | Your data is never stored |
+            <a href="https://github.com/rashis-git/ats-resume-optimizer" target="_blank">GitHub</a>
+        </footer>
+    </div>
+
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        let optimizedResume = '';
+
+        async function optimizeResume() {
+            const provider = document.getElementById('provider').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const resume = document.getElementById('resume').value;
+            const jobDescription = document.getElementById('jobDescription').value;
+
+            // Validation
+            if (!apiKey) {
+                showError('Please enter your API key');
+                return;
+            }
+            if (!resume) {
+                showError('Please provide your resume');
+                return;
+            }
+            if (!jobDescription) {
+                showError('Please provide the job description');
+                return;
+            }
+
+            // Show loading
+            hideError();
+            hideSuccess();
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultSection').classList.remove('show');
+            document.getElementById('optimizeBtn').disabled = true;
+
+            try {
+                const response = await fetch('/api/optimize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        provider,
+                        api_key: apiKey,
+                        resume,
+                        job_description: jobDescription
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    optimizedResume = data.optimized_resume;
+                    displayResult(optimizedResume);
+                    showSuccess();
+                } else {
+                    showError(data.error || 'An error occurred');
+                }
+            } catch (error) {
+                showError('Failed to connect to the server: ' + error.message);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+                document.getElementById('optimizeBtn').disabled = false;
+            }
+        }
+
+        function displayResult(markdown) {
+            document.getElementById('previewContent').innerHTML = marked.parse(markdown);
+            document.getElementById('markdownContent').textContent = markdown;
+            document.getElementById('resultSection').classList.add('show');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            if (tab === 'preview') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('previewTab').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('markdownTab').classList.add('active');
+            }
+        }
+
+        function downloadMarkdown() {
+            if (!optimizedResume) return;
+
+            const blob = new Blob([optimizedResume], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'optimized_resume.md';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyToClipboard() {
+            if (!optimizedResume) return;
+
+            navigator.clipboard.writeText(optimizedResume).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        function showSuccess() {
+            document.getElementById('successMessage').classList.add('show');
+        }
+
+        function hideSuccess() {
+            document.getElementById('successMessage').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
