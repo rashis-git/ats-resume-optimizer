@@ -3,8 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATS Resume Optimizer</title>
+    <title>ATS Resume Optimizer | Tailor Your Resume for Any Job</title>
+    <meta name="description" content="Optimize your resume for Applicant Tracking Systems using AI. Get more interviews with keyword-optimized, professionally tailored resumes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-dark: #1e3a8a;
+            --secondary: #0f172a;
+            --accent: #059669;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --white: #ffffff;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -12,441 +42,844 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .container {
-            max-width: 1200px;
+        /* Navigation */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 18px;
+            height: 18px;
+            color: var(--white);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            padding: 48px 24px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
             margin: 0 auto;
         }
 
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            opacity: 0.9;
-            font-size: 1.1rem;
-        }
-
-        .main-card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .config-bar {
-            background: #f8f9fa;
-            padding: 20px 30px;
-            border-bottom: 1px solid #e9ecef;
+        .trust-badges {
             display: flex;
-            gap: 20px;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 24px;
             flex-wrap: wrap;
-            align-items: flex-end;
         }
 
-        .config-group {
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .trust-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Config Section */
+        .config-section {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .config-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .config-header svg {
+            width: 20px;
+            height: 20px;
+            color: var(--gray-500);
+        }
+
+        .config-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 640px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
-        .config-group label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #495057;
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
         }
 
-        .config-group select,
-        .config-group input {
+        .form-select,
+        .form-input {
             padding: 10px 14px;
-            border: 1px solid #ced4da;
+            border: 1px solid var(--gray-300);
             border-radius: 8px;
-            font-size: 0.95rem;
-            min-width: 200px;
+            font-size: 0.9375rem;
+            font-family: inherit;
+            background: var(--white);
+            color: var(--gray-800);
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
 
-        .config-group select:focus,
-        .config-group input:focus {
+        .form-select:focus,
+        .form-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
-        .input-grid {
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-hint svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Input Section */
+        .input-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0;
+            gap: 24px;
+            margin-bottom: 24px;
         }
 
         @media (max-width: 768px) {
-            .input-grid {
+            .input-section {
                 grid-template-columns: 1fr;
             }
         }
 
-        .input-section {
-            padding: 25px 30px;
+        .input-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
         }
 
-        .input-section:first-child {
-            border-right: 1px solid #e9ecef;
-        }
-
-        @media (max-width: 768px) {
-            .input-section:first-child {
-                border-right: none;
-                border-bottom: 1px solid #e9ecef;
-            }
-        }
-
-        .input-section h3 {
-            font-size: 1.1rem;
-            color: #343a40;
-            margin-bottom: 12px;
+        .input-card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-100);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        textarea {
-            width: 100%;
-            height: 300px;
-            padding: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.9rem;
-            resize: vertical;
-            line-height: 1.5;
+        .input-card-header svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
         }
 
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .button-section {
-            padding: 20px 30px;
-            background: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            text-align: center;
-        }
-
-        .btn-optimize {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 14px 40px;
-            font-size: 1.1rem;
+        .input-card-header h3 {
+            font-size: 0.9375rem;
             font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .input-card-body {
+            padding: 16px 20px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 320px;
+            padding: 14px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            line-height: 1.6;
+            resize: vertical;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: var(--white);
+        }
+
+        .form-textarea::placeholder {
+            color: var(--gray-400);
+        }
+
+        /* Action Section */
+        .action-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
             border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
         }
 
-        .btn-optimize:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
         }
 
-        .btn-optimize:disabled {
-            opacity: 0.6;
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary:disabled {
+            background: var(--gray-300);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .result-section {
-            display: none;
-            padding: 30px;
-            border-top: 1px solid #e9ecef;
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
         }
 
-        .result-section.show {
-            display: block;
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .result-header h3 {
-            font-size: 1.3rem;
-            color: #343a40;
-        }
-
-        .download-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-download {
-            padding: 10px 20px;
-            border: 1px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-download:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #e9ecef;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            border: none;
-            background: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #6c757d;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .preview-content {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 8px;
-            line-height: 1.7;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .preview-content h1,
-        .preview-content h2,
-        .preview-content h3 {
-            margin-top: 1.2em;
-            margin-bottom: 0.6em;
-        }
-
-        .preview-content h1:first-child {
-            margin-top: 0;
-        }
-
-        .preview-content ul {
-            margin-left: 20px;
-            margin-bottom: 1em;
-        }
-
-        .preview-content li {
-            margin-bottom: 0.5em;
-        }
-
-        .markdown-content {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.85rem;
-            white-space: pre-wrap;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .loading {
+        /* Loading State */
+        .loading-overlay {
             display: none;
             text-align: center;
-            padding: 40px;
+            padding: 48px 24px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            margin-bottom: 24px;
         }
 
-        .loading.show {
+        .loading-overlay.show {
             display: block;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e9ecef;
-            border-top-color: #667eea;
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .error-message {
-            background: #fff5f5;
-            border: 1px solid #feb2b2;
-            color: #c53030;
-            padding: 15px 20px;
+        .loading-text {
+            color: var(--gray-600);
+            font-size: 0.9375rem;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 14px 18px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.9375rem;
         }
 
-        .error-message.show {
-            display: block;
+        .alert.show {
+            display: flex;
         }
 
-        .success-message {
-            background: #f0fff4;
-            border: 1px solid #9ae6b4;
-            color: #276749;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .alert svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            border: 1px solid #fecaca;
+            color: var(--error);
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            border: 1px solid #a7f3d0;
+            color: var(--success);
+        }
+
+        /* Results Section */
+        .results-section {
             display: none;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
         }
 
-        .success-message.show {
+        .results-section.show {
             display: block;
         }
 
-        footer {
+        .results-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .results-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-title svg {
+            width: 24px;
+            height: 24px;
+            color: var(--success);
+        }
+
+        .results-title h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            color: var(--gray-700);
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: inherit;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-light);
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .btn-secondary svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 24px;
+        }
+
+        .tab-btn {
+            padding: 14px 20px;
+            border: none;
+            background: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: inherit;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.15s;
+        }
+
+        .tab-btn:hover {
+            color: var(--gray-700);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 24px;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Preview Content */
+        .preview-content {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 32px;
+            max-height: 600px;
+            overflow-y: auto;
+            line-height: 1.7;
+        }
+
+        .preview-content h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+        }
+
+        .preview-content h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .preview-content h3 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        .preview-content p {
+            margin-bottom: 12px;
+            color: var(--gray-700);
+        }
+
+        .preview-content ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .preview-content li {
+            margin-bottom: 6px;
+            color: var(--gray-700);
+        }
+
+        .preview-content strong {
+            color: var(--gray-800);
+        }
+
+        /* Markdown View */
+        .markdown-content {
+            background: var(--gray-800);
+            color: #e2e8f0;
+            padding: 20px 24px;
+            border-radius: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 0.8125rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Footer */
+        .footer {
             text-align: center;
-            color: rgba(255,255,255,0.8);
-            margin-top: 30px;
-            font-size: 0.9rem;
+            padding: 32px 24px;
+            color: var(--gray-500);
+            font-size: 0.875rem;
         }
 
-        footer a {
-            color: white;
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
         }
 
-        .privacy-note {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-top: 8px;
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .trust-badges {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .results-actions {
+                width: 100%;
+            }
+
+            .btn-secondary {
+                flex: 1;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>ATS Resume Optimizer</h1>
-            <p>Optimize your resume for any job description using AI. Your data is processed in real-time and never stored.</p>
-        </header>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                ATS Optimizer
+            </a>
+            <div class="nav-links">
+                <a href="https://github.com/rashis-git/ats-resume-optimizer" target="_blank" class="nav-link">GitHub</a>
+            </div>
+        </div>
+    </nav>
 
-        <div class="main-card">
-            <div class="config-bar">
-                <div class="config-group">
-                    <label for="provider">AI Provider</label>
-                    <select id="provider">
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Optimize Your Resume for Any Job</h1>
+        <p>Use AI to tailor your resume for Applicant Tracking Systems. Increase your interview chances with keyword-optimized content.</p>
+        <div class="trust-badges">
+            <div class="trust-badge">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                Your data is never stored
+            </div>
+            <div class="trust-badge">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Instant results
+            </div>
+            <div class="trust-badge">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                </svg>
+                Bring your own API key
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- API Configuration -->
+        <section class="config-section">
+            <div class="config-header">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <h2>API Configuration</h2>
+            </div>
+            <div class="config-grid">
+                <div class="form-group">
+                    <label class="form-label" for="provider">AI Provider</label>
+                    <select class="form-select" id="provider">
                         <option value="Claude">Claude (Anthropic)</option>
                         <option value="OpenAI">OpenAI (GPT-4)</option>
                         <option value="OpenRouter">OpenRouter</option>
                         <option value="Gemini">Gemini (Google)</option>
                     </select>
                 </div>
-                <div class="config-group" style="flex: 1; min-width: 250px;">
-                    <label for="apiKey">API Key</label>
-                    <input type="password" id="apiKey" placeholder="Enter your API key">
-                    <div class="privacy-note">Your API key is used only for this request and never stored</div>
-                </div>
-            </div>
-
-            <div class="input-grid">
-                <div class="input-section">
-                    <h3>Your Resume</h3>
-                    <textarea id="resume" placeholder="# Your Name
-email@example.com | LinkedIn | Phone
-
-## PROFESSIONAL SUMMARY
-...
-
-## EXPERIENCE
-..."></textarea>
-                </div>
-                <div class="input-section">
-                    <h3>Job Description</h3>
-                    <textarea id="jobDescription" placeholder="Paste the full job description including:
-- Company name
-- Role title
-- Responsibilities
-- Requirements
-- Preferred qualifications"></textarea>
-                </div>
-            </div>
-
-            <div class="button-section">
-                <button class="btn-optimize" id="optimizeBtn" onclick="optimizeResume()">
-                    Optimize Resume
-                </button>
-            </div>
-
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Optimizing your resume... This may take 30-60 seconds.</p>
-            </div>
-
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage">Resume optimized successfully!</div>
-
-            <div class="result-section" id="resultSection">
-                <div class="result-header">
-                    <h3>Optimized Resume</h3>
-                    <div class="download-buttons">
-                        <button class="btn-download" onclick="downloadMarkdown()">Download Markdown</button>
-                        <button class="btn-download" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <div class="form-group">
+                    <label class="form-label" for="apiKey">API Key</label>
+                    <input type="password" class="form-input" id="apiKey" placeholder="Enter your API key">
+                    <div class="form-hint">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Your key is used only for this request and never stored
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('preview')">Preview</button>
-                    <button class="tab" onclick="switchTab('markdown')">Markdown</button>
+        <!-- Input Section -->
+        <section class="input-section">
+            <div class="input-card">
+                <div class="input-card-header">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <h3>Your Resume</h3>
                 </div>
+                <div class="input-card-body">
+                    <textarea class="form-textarea" id="resume" placeholder="# Your Name
+email@example.com | linkedin.com/in/yourname | (555) 123-4567
 
-                <div class="tab-content active" id="previewTab">
-                    <div class="preview-content" id="previewContent"></div>
-                </div>
+## PROFESSIONAL SUMMARY
+Results-driven professional with X years of experience...
 
-                <div class="tab-content" id="markdownTab">
-                    <div class="markdown-content" id="markdownContent"></div>
+## EXPERIENCE
+**Company Name** | Role Title | Date - Present
+- Achievement with quantified impact
+- Another achievement...
+
+## EDUCATION
+**University Name** | Degree | Year
+
+## SKILLS
+Skill 1, Skill 2, Skill 3..."></textarea>
                 </div>
             </div>
+
+            <div class="input-card">
+                <div class="input-card-header">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3>Job Description</h3>
+                </div>
+                <div class="input-card-body">
+                    <textarea class="form-textarea" id="jobDescription" placeholder="Paste the complete job description here, including:
+
+- Job title and company name
+- Role responsibilities
+- Required qualifications
+- Preferred qualifications
+- Required skills and experience
+
+The more detail you provide, the better the optimization."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Button -->
+        <section class="action-section">
+            <button class="btn-primary" id="optimizeBtn" onclick="optimizeResume()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Optimize Resume
+            </button>
+        </section>
+
+        <!-- Loading State -->
+        <div class="loading-overlay" id="loading">
+            <div class="spinner"></div>
+            <p class="loading-text">Analyzing job description and optimizing your resume...<br>This typically takes 30-60 seconds.</p>
         </div>
 
-        <footer>
-            Built with Vercel | Your data is never stored |
+        <!-- Alerts -->
+        <div class="alert alert-error" id="errorMessage">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span id="errorText"></span>
+        </div>
+
+        <div class="alert alert-success" id="successMessage">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Resume optimized successfully! Review your tailored resume below.</span>
+        </div>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultSection">
+            <div class="results-header">
+                <div class="results-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3>Optimized Resume</h3>
+                </div>
+                <div class="results-actions">
+                    <button class="btn-secondary" onclick="downloadMarkdown()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download
+                    </button>
+                    <button class="btn-secondary" onclick="copyToClipboard()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('preview')">Preview</button>
+                <button class="tab-btn" onclick="switchTab('markdown')">Markdown</button>
+            </div>
+
+            <div class="tab-panel active" id="previewTab">
+                <div class="preview-content" id="previewContent"></div>
+            </div>
+
+            <div class="tab-panel" id="markdownTab">
+                <div class="markdown-content" id="markdownContent"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
             <a href="https://github.com/rashis-git/ats-resume-optimizer" target="_blank">GitHub</a>
-        </footer>
-    </div>
+            <a href="https://console.anthropic.com/" target="_blank">Get Claude API Key</a>
+            <a href="https://platform.openai.com/" target="_blank">Get OpenAI API Key</a>
+        </div>
+        <p>Built by Rashi Gupta | Your data is processed securely and never stored</p>
+    </footer>
 
     <!-- Marked.js for markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -462,15 +895,15 @@ email@example.com | LinkedIn | Phone
 
             // Validation
             if (!apiKey) {
-                showError('Please enter your API key');
+                showError('Please enter your API key to continue.');
                 return;
             }
-            if (!resume) {
-                showError('Please provide your resume');
+            if (!resume.trim()) {
+                showError('Please paste your resume in the left panel.');
                 return;
             }
-            if (!jobDescription) {
-                showError('Please provide the job description');
+            if (!jobDescription.trim()) {
+                showError('Please paste the job description in the right panel.');
                 return;
             }
 
@@ -502,10 +935,10 @@ email@example.com | LinkedIn | Phone
                     displayResult(optimizedResume);
                     showSuccess();
                 } else {
-                    showError(data.error || 'An error occurred');
+                    showError(data.error || 'An error occurred while processing your request.');
                 }
             } catch (error) {
-                showError('Failed to connect to the server: ' + error.message);
+                showError('Unable to connect to the server. Please try again.');
             } finally {
                 document.getElementById('loading').classList.remove('show');
                 document.getElementById('optimizeBtn').disabled = false;
@@ -516,17 +949,20 @@ email@example.com | LinkedIn | Phone
             document.getElementById('previewContent').innerHTML = marked.parse(markdown);
             document.getElementById('markdownContent').textContent = markdown;
             document.getElementById('resultSection').classList.add('show');
+
+            // Scroll to results
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(c => c.classList.remove('active'));
 
             if (tab === 'preview') {
-                document.querySelector('.tab:first-child').classList.add('active');
+                document.querySelector('.tab-btn:first-child').classList.add('active');
                 document.getElementById('previewTab').classList.add('active');
             } else {
-                document.querySelector('.tab:last-child').classList.add('active');
+                document.querySelector('.tab-btn:last-child').classList.add('active');
                 document.getElementById('markdownTab').classList.add('active');
             }
         }
@@ -549,19 +985,23 @@ email@example.com | LinkedIn | Phone
             if (!optimizedResume) return;
 
             navigator.clipboard.writeText(optimizedResume).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = 'Copied!';
+                const btn = event.target.closest('.btn-secondary');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Copied!
+                `;
                 setTimeout(() => {
-                    btn.textContent = originalText;
+                    btn.innerHTML = originalHTML;
                 }, 2000);
             });
         }
 
         function showError(message) {
-            const el = document.getElementById('errorMessage');
-            el.textContent = message;
-            el.classList.add('show');
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').classList.add('show');
         }
 
         function hideError() {
